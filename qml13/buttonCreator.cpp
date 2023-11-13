@@ -8,7 +8,7 @@ ButtonCreator::ButtonCreator(QQmlApplicationEngine &engine, QObject *parent) :
 }
 
 
-void ButtonCreator::createButton(QQuickItem* property, int height, int width)
+void ButtonCreator::createButton(QQuickItem* property, QString textButton, int action)
 {
     if(property)
     {
@@ -18,12 +18,43 @@ void ButtonCreator::createButton(QQuickItem* property, int height, int width)
         if(buttonItem)
         {
             buttonItem->setParentItem(property);
-            buttonItem->setWidth(width);
-            buttonItem->setHeight(height);
-            buttonItem->setProperty("anchors.centerIn", QVariant::fromValue(property));
+            buttonItem->setProperty("text", textButton);
+            setActionButton(action);
+            connect(buttonItem, SIGNAL(clicked()), this, SLOT(handleButtonClick()));
         }else
         {
             qDebug() << "qmlObject not found";
         }
+    }
+}
+
+void ButtonCreator::setActionButton(int action)
+{
+    actionButton = action;
+}
+
+int ButtonCreator::getActionButton()
+{
+    return actionButton;
+}
+
+void ButtonCreator::handleButtonClick()
+{
+    switch (actionButton) {
+    case 0:
+        buttonActionHandler.handleButtonSoftware();
+        break;
+    case 1:
+        buttonActionHandler.handleButtonHardware();
+        break;
+    case 2:
+        buttonActionHandler.handleButtonVillanueva();
+        break;
+    case 3:
+        buttonActionHandler.handleButtonFernandez();
+        break;
+    case 4:
+        buttonActionHandler.handleButtonMoran();
+        break;
     }
 }
