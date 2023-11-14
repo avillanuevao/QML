@@ -8,7 +8,7 @@ ButtonCreator::ButtonCreator(QQmlApplicationEngine &engine, QObject *parent) :
 }
 
 
-void ButtonCreator::createButton(QQuickItem* property, QString textButton, int action)
+void ButtonCreator::createButton(QQuickItem* property, QString textButton, const char* slotFunction)
 {
     if(property)
     {
@@ -19,8 +19,8 @@ void ButtonCreator::createButton(QQuickItem* property, QString textButton, int a
         {
             buttonItem->setParentItem(property);
             buttonItem->setProperty("text", textButton);
-            setActionButton(action);
-            connect(buttonItem, SIGNAL(clicked()), this, SLOT(handleButtonClick()));
+            //setActionButton(action);
+            connect(buttonItem, SIGNAL(clicked()), this, slotFunction);
         }else
         {
             qDebug() << "qmlObject not found";
@@ -28,18 +28,10 @@ void ButtonCreator::createButton(QQuickItem* property, QString textButton, int a
     }
 }
 
-void ButtonCreator::setActionButton(int action)
-{
-    actionButton = action;
-}
-
-int ButtonCreator::getActionButton()
-{
-    return actionButton;
-}
-
 void ButtonCreator::handleButtonClick()
 {
+    qDebug() << "handleButtonClick";
+    /*
     switch (actionButton) {
     case 0:
         buttonActionHandler.handleButtonSoftware();
@@ -57,4 +49,5 @@ void ButtonCreator::handleButtonClick()
         buttonActionHandler.handleButtonMoran();
         break;
     }
+    */
 }

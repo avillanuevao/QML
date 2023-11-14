@@ -8,7 +8,6 @@
 
 #include "rowLayoutCreator.hpp"
 #include "buttonCreator.hpp"
-#include "buttonActionHandler.hpp"
 
 class SceneCreator : public QObject {
     Q_OBJECT
