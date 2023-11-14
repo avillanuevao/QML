@@ -18,7 +18,6 @@ int main(int argc, char *argv[]) {
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
-
-    sceneCreator.createScene("principalColumn", 30, 30);
+    sceneCreator.createSceneryA();
     return app.exec();
 }

@@ -12,6 +12,7 @@ ApplicationWindow {
 
     ColumnLayout
     {
+        objectName: "principal"
         id: principalColumn
         anchors.centerIn: parent
     }

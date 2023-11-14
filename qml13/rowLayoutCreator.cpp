@@ -8,7 +8,7 @@ RowLayoutCreator::RowLayoutCreator(QQmlApplicationEngine &engine, QObject *paren
 }
 
 
-void RowLayoutCreator::createRowLayout(QString property, int height, int width)
+void RowLayoutCreator::createRowLayout(QString property)
 {
     QObject *rootObject = engine.rootObjects().first();
     QObject *qmlObject = rootObject->property(property.toStdString().c_str()).value<QObject*>();
@@ -22,8 +22,6 @@ void RowLayoutCreator::createRowLayout(QString property, int height, int width)
         if(object)
         {
             rowLayoutItem->setParentItem(object);
-            rowLayoutItem->setWidth(width);
-            rowLayoutItem->setHeight(height);
             itemID.push_back(rowLayoutItem);
         }else
         {
@@ -35,4 +33,9 @@ void RowLayoutCreator::createRowLayout(QString property, int height, int width)
 QVector<QQuickItem *> RowLayoutCreator::getItemId()
 {
     return itemID;
+}
+
+void RowLayoutCreator::resetItemId()
+{
+    itemID.clear();
 }
