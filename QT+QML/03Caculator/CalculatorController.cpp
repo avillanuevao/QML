@@ -10,7 +10,7 @@ CalculatorController::CalculatorController(std::shared_ptr<SceneCreator> sceneCr
 
 void CalculatorController::printCalculator()
 {
-    m_sceneCreator->createScenery();
+    m_sceneCreator->scenaryDefinition();
 }
 
 void CalculatorController::getOperationalInput(CalculatorComponent parameter)
@@ -23,11 +23,6 @@ void CalculatorController::getNumericalInput(int parameter)
 {
     m_model.setInput(parameter);
     updateDisplay();
-}
-
-void CalculatorController::display(QString parameter)
-{
-    m_label += parameter;
 }
 
 void CalculatorController::updateDisplay()

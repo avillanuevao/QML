@@ -11,30 +11,26 @@ class CalculatorModel
 public:
 
     CalculatorModel();
-    void addition(int numb1, int numb2);
-    void subtraction(int numb1, int numb2);
-    void division(int numb1, int numb2);
-    void multiplication(int numb1, int numb2);
-    void equal();
-    void clear();
     void setInput(CalculatorComponent input);
-    void setInput(int input);
-    void setResult(int result);
-    int getResult();
-    void operationSelector(CalculatorComponent operation, int numberOne, int numberTwo);
-    int completedInt(QVector<int> number);
-    void setDisplayText();
+    void setInput(double input);
     QString getDisplayText();
-    QString calculatorComponentString();
 private:
     QString m_numberOne = "";
     QString m_numberTwo = "";
     QString m_componentCalculator = "";
     QString m_displayText = "";
-    QVector<int> m_numberShedOne;
-    QVector<int> m_numberShedTwo;
+    double m_result;
     CalculatorComponent m_calculatorComponent = CalculatorComponent::EMPTY;
-    int m_result;
+    void setDisplayText();
+    void addition(double numb1, double numb2);
+    void subtraction(double numb1, double numb2);
+    void division(double numb1, double numb2);
+    void multiplication(double numb1, double numb2);
+    void equal();
+    void clear();
+    void operationSelector(CalculatorComponent operation, double numberOne, double numberTwo);
+    QString calculatorComponentString();
+
 };
 
 #endif

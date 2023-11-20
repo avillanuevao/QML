@@ -5,46 +5,6 @@ CalculatorModel::CalculatorModel()
 
 }
 
-void CalculatorModel::addition(int numb1, int numb2)
-{
-    m_result = numb1 + numb2;
-}
-
-void CalculatorModel::subtraction(int numb1, int numb2)
-{
-    m_result = numb1 - numb2;
-}
-
-void CalculatorModel::division(int numb1, int numb2)
-{
-    m_result = numb1 / numb2;
-}
-
-void CalculatorModel::multiplication(int numb1, int numb2)
-{
-    m_result = numb1 * numb2;
-}
-
-void CalculatorModel::equal()
-{
-    int numberOne = m_numberOne.toInt();
-    int numberTwo = m_numberTwo.toInt();
-    operationSelector(m_calculatorComponent, numberOne, numberTwo);
-    m_numberOne = QString::number(m_result);
-    m_numberTwo = "";
-    m_calculatorComponent = CalculatorComponent::EMPTY;
-    setDisplayText();
-}
-
-void CalculatorModel::clear()
-{
-    m_result = 0;
-    m_numberOne = "";
-    m_numberTwo = "";
-    m_calculatorComponent = CalculatorComponent::EMPTY;
-    setDisplayText();
-}
-
 void CalculatorModel::setInput(CalculatorComponent input)
 {
 
@@ -71,7 +31,7 @@ void CalculatorModel::setInput(CalculatorComponent input)
     setDisplayText();
 }
 
-void CalculatorModel::setInput(int input)
+void CalculatorModel::setInput(double input)
 {
     if(m_calculatorComponent == CalculatorComponent::EMPTY && m_numberTwo == "")
     {
@@ -84,17 +44,57 @@ void CalculatorModel::setInput(int input)
     setDisplayText();
 }
 
-void CalculatorModel::setResult(int result)
+QString CalculatorModel::getDisplayText()
 {
-    m_result = result;
+    return m_displayText;
 }
 
-int CalculatorModel::getResult()
+void CalculatorModel::setDisplayText()
 {
-    return m_result;
+    m_displayText = m_numberOne + calculatorComponentString() + m_numberTwo;
 }
 
-void CalculatorModel::operationSelector(CalculatorComponent operation, int numberOne, int numberTwo)
+void CalculatorModel::addition(double numb1, double numb2)
+{
+    m_result = numb1 + numb2;
+}
+
+void CalculatorModel::subtraction(double numb1, double numb2)
+{
+    m_result = numb1 - numb2;
+}
+
+void CalculatorModel::division(double numb1, double numb2)
+{
+    m_result = numb1 / numb2;
+}
+
+void CalculatorModel::multiplication(double numb1, double numb2)
+{
+    m_result = numb1 * numb2;
+}
+
+void CalculatorModel::equal()
+{
+    double numberOne = m_numberOne.toDouble();
+    double numberTwo = m_numberTwo.toDouble();
+    operationSelector(m_calculatorComponent, numberOne, numberTwo);
+    m_numberOne = QString::number(m_result);
+    m_numberTwo = "";
+    m_calculatorComponent = CalculatorComponent::EMPTY;
+    setDisplayText();
+}
+
+void CalculatorModel::clear()
+{
+    m_result = 0;
+    m_numberOne = "";
+    m_numberTwo = "";
+    m_calculatorComponent = CalculatorComponent::EMPTY;
+    setDisplayText();
+}
+
+void CalculatorModel::operationSelector(CalculatorComponent operation, double numberOne, double numberTwo)
 {
     switch (operation) {
     case CalculatorComponent::ADD:
@@ -112,31 +112,6 @@ void CalculatorModel::operationSelector(CalculatorComponent operation, int numbe
     default:
         qDebug() << "Not valid";
     }
-}
-
-int CalculatorModel::completedInt(QVector<int> number)
-{
-    int completedNumber = 0;
-    for(int i = 0; i < number.size(); i++)
-    {
-        completedNumber = completedNumber * 10 + number.at(i);
-    }
-    return completedNumber;
-}
-
-void CalculatorModel::setDisplayText()
-{
-    m_displayText = m_numberOne + calculatorComponentString() + m_numberTwo;
-    qDebug() << m_numberOne << " NumberO";
-    qDebug() << calculatorComponentString() << " calculatorC";
-    qDebug() << m_numberTwo << " NumberT";
-
-
-}
-
-QString CalculatorModel::getDisplayText()
-{
-    return m_displayText;
 }
 
 QString CalculatorModel::calculatorComponentString()

@@ -8,7 +8,7 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
-    title: qsTr("SceneA")
+    title: qsTr("Calculator")
 
     ColumnLayout
     {
