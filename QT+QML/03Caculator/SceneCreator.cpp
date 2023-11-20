@@ -11,40 +11,19 @@ SceneCreator::SceneCreator(QQmlApplicationEngine &engine, QObject *parent) :
     // Constructor implementation
 }
 
-void SceneCreator::createScene(int numberColumns, int numberRows, QVector<int> numberButtons, QVector<QString> textButton, QVector<std::function<void()>> functionVector)
+void SceneCreator::createScene()
 {
-    createColumn(numberColumns);
-    createRows(numberRows);
-    createText("0");
-    createButtons(numberButtons, textButton, functionVector);
-}
-
-void SceneCreator::scenaryDefinition()
-{
-
-    QVector<QString> textButton = {"", "7", "8", "9", "+", "4", "5", "6", "-", "1", "2", "3", "/", "Ce", "0", "=", "*"};
     int numberColumns = 1;
+    createColumn(numberColumns);
     int numberRows = 5;
+    createRows(numberRows);
+    QVector<QQuickItem*> itemIDRow = rowLayoutCreator.getItemId();
+    QVector<int> numberTexts = {1, 0, 0, 0, 0};
+    QVector<QString> textLabel = {"0"};
+    createText(numberTexts, itemIDRow, textLabel);
+    QVector<QString> textButton = {"", "7", "8", "9", "+", "4", "5", "6", "-", "1", "2", "3", "/", "Ce", "0", "=", "*"};
     QVector<int> numberButtons = {1, 4, 4, 4, 4};
-    QVector<std::function<void()>> functionVector;
-    functionVector.append(std::bind(&SceneCreator::handleButtonSolutionClicked, this));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 7));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 8));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 9));
-    functionVector.append(std::bind(&SceneCreator::handleButtonCalculatorComponentClicked, this, CalculatorComponent::ADD));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 4));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 5));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 6));
-    functionVector.append(std::bind(&SceneCreator::handleButtonCalculatorComponentClicked, this, CalculatorComponent::SUBTRACT));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 1));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 2));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 3));
-    functionVector.append(std::bind(&SceneCreator::handleButtonCalculatorComponentClicked, this, CalculatorComponent::DIVIDE));
-    functionVector.append(std::bind(&SceneCreator::handleButtonCalculatorComponentClicked, this, CalculatorComponent::CLEAR));
-    functionVector.append(std::bind(&SceneCreator::handleButtonNumericClicked, this, 0));
-    functionVector.append(std::bind(&SceneCreator::handleButtonCalculatorComponentClicked, this, CalculatorComponent::EQUAL));
-    functionVector.append(std::bind(&SceneCreator::handleButtonCalculatorComponentClicked, this, CalculatorComponent::MULTIPLY));
-    createScene(numberColumns, numberRows, numberButtons, textButton, functionVector);
+    createButtons(numberButtons, itemIDRow, textButton);
 }
 
 void SceneCreator::updateText(QString text)
@@ -84,28 +63,82 @@ void SceneCreator::createRows(int numberRows)
     }
 }
 
-void SceneCreator::createText(QString text)
+void SceneCreator::createText(QVector<int> numberTexts, QVector<QQuickItem*> itemID, QVector<QString> textLabel)
 {
-    QVector<QQuickItem*> itemID = rowLayoutCreator.getItemId();
-    textCreator.createText(itemID.at(0), text);
+    for(int j = 0; j < itemID.size(); j++)
+    {
+        for(int i = 0; i < numberTexts.at(j); i++)
+        {
+            textCreator.createText(itemID.at(j), textLabel.at(0));
+            textLabel.removeFirst();
+        }
+    }
 }
 
-void SceneCreator::createButtons(QVector<int> numberButtons, QVector<QString> textButton, QVector<std::function<void()>> functionVector)
+void SceneCreator::createButtons(QVector<int> numberButtons, QVector<QQuickItem*> itemID, QVector<QString> textButton)
 {
-    QVector<QQuickItem*> itemID = rowLayoutCreator.getItemId();
-
     for(int j = 0; j < itemID.size(); j++)
     {
         for(int i = 0; i < numberButtons.at(j); i++)
         {
             ButtonCreator* buttonCreator = new ButtonCreator(engine, this);
-            std::function<void()> buttonFunction = functionVector.at(0);
-            buttonCreator->createButton(itemID.at(j), textButton.at(0), SLOT(handleButtonClick()), [this, buttonFunction, buttonCreator]()
+            QString label = textButton.at(0);
+            buttonCreator->createButton(itemID.at(j), textButton.at(0), SLOT(handleButtonClick()), [this, buttonCreator, label]()
             {
-                connect(buttonCreator, &ButtonCreator::buttonClicked, this, buttonFunction);
+                std::function<void ()> function = buttonHandlerSelector(label);
+                connect(buttonCreator, &ButtonCreator::buttonClicked, this, function);
             });
             textButton.removeFirst();
-            functionVector.removeFirst();
         }
     }
 }
+
+std::function<void ()> SceneCreator::buttonHandlerSelector(QString input)
+{
+    if(stringToCalculorComponent(input) == CalculatorComponent::EMPTY)
+    {
+        return buttonHandlerSelected(input);
+    }else
+    {
+        return buttonHandlerSelected(stringToCalculorComponent(input));
+    }
+}
+
+std::function<void ()> SceneCreator::buttonHandlerSelected(QString input)
+{
+    return std::bind(&SceneCreator::handleButtonNumericClicked, this, input.toInt());
+}
+
+std::function<void ()> SceneCreator::buttonHandlerSelected(CalculatorComponent input)
+{
+    return std::bind(&SceneCreator::handleButtonCalculatorComponentClicked, this, input);
+
+}
+
+CalculatorComponent SceneCreator::stringToCalculorComponent(QString input)
+{
+    if(input == "+")
+    {
+        return CalculatorComponent::ADD;
+    }else if(input == "-")
+    {
+        return CalculatorComponent::SUBTRACT;
+    }else if(input == "/")
+    {
+        return CalculatorComponent::DIVIDE;
+    }else if(input == "*")
+    {
+        return CalculatorComponent::MULTIPLY;
+    }else if(input == "Ce")
+    {
+        return CalculatorComponent::CLEAR;
+    }else if(input == "=")
+    {
+        return CalculatorComponent::EQUAL;
+    }else
+    {
+        return CalculatorComponent::EMPTY;
+    }
+
+}
+

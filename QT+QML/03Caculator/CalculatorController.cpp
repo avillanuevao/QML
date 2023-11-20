@@ -10,7 +10,7 @@ CalculatorController::CalculatorController(std::shared_ptr<SceneCreator> sceneCr
 
 void CalculatorController::printCalculator()
 {
-    m_sceneCreator->scenaryDefinition();
+    m_sceneCreator->createScene();
 }
 
 void CalculatorController::getOperationalInput(CalculatorComponent parameter)

@@ -16,8 +16,7 @@ class SceneCreator : public QObject {
     Q_OBJECT
 public:
     explicit SceneCreator(QQmlApplicationEngine &engine, QObject *parent = nullptr);
-    Q_INVOKABLE void createScene(int numberColumns, int numberRows, QVector<int> numberButtons, QVector<QString> textButton, QVector<std::function<void()>> functionVector);
-    void scenaryDefinition();
+    Q_INVOKABLE void createScene();
     void updateText(QString text);
 Q_SIGNALS:
     void buttonNumericClicked(int parameter);
@@ -36,8 +35,12 @@ private:
 
     void createColumn(int numberColumns);
     void createRows(int numberRows);
-    void createText(QString text);
-    void createButtons(QVector<int> numberButtons, QVector<QString> textButton, QVector<std::function<void ()>> functionVector);
+    void createText(QVector<int> numberTexts, QVector<QQuickItem *> itemID, QVector<QString> textLabel);
+    void createButtons(QVector<int> numberButtons, QVector<QQuickItem *> itemID, QVector<QString> textButton);
+    std::function<void ()> buttonHandlerSelector(QString input);
+    std::function<void ()> buttonHandlerSelected(QString input);
+    std::function<void ()> buttonHandlerSelected(CalculatorComponent input);
+    CalculatorComponent stringToCalculorComponent(QString input);
 };
 
 #endif
