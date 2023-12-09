@@ -20,6 +20,8 @@ void WordBook::setSpanish()
     m_spanish[Vocabulary::DebtsWord] = "Deudas";
     m_spanish[Vocabulary::AcceptWord] = "Aceptar";
     m_spanish[Vocabulary::ResetWord] = "Resetear";
+    m_spanish[Vocabulary::EnglishWord] = "Ingles";
+    m_spanish[Vocabulary::SpanishWord] = "Español";
 }
 
 void WordBook::setEnglish()
@@ -36,6 +38,8 @@ void WordBook::setEnglish()
     m_english[Vocabulary::DebtsWord] = "Debts";
     m_english[Vocabulary::AcceptWord] = "Accept";
     m_english[Vocabulary::ResetWord] = "Reset";
+    m_english[Vocabulary::EnglishWord] = "English";
+    m_english[Vocabulary::SpanishWord] = "Spanish";
 }
 
 std::map<Vocabulary, QString> WordBook::getLanguage(Languages language)

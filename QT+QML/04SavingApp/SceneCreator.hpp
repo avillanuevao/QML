@@ -56,12 +56,13 @@ private:
     int amountMoney = 0;
     void createColumn();
     void createRow(QVector<QQuickItem*> parent, int parentID);
-    void createButton(QString textButton, UIButtonType idButton, QVector<QQuickItem*> parent, int parentID);
-    void createComboBox(QStringList modelList, UIItemType idComboBox, QVector<QQuickItem*> parent, int parentID);
+    void createButton(UIButtonType idButton, QVector<QQuickItem*> parent, int parentID);
+    void createComboBox(UIItemType idComboBox, QVector<QQuickItem*> parent, int parentID);
     void createTextField(QVector<QQuickItem*> parent, int parentID);
     void createTextElement(QVector<QQuickItem*> parent, int parentID);
     void modifyTextElement(int newText);
-    void modifyTextLanguage();
+    void initializeTextLanguage();
+    void setTextLanguage();
 };
 
 #endif // SCENECREATOR_HPP

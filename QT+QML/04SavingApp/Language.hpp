@@ -24,7 +24,9 @@ enum Vocabulary
     DebtsWord,
     CarWord,
     AcceptWord,
-    ResetWord
+    ResetWord,
+    EnglishWord,
+    SpanishWord
 };
 
 class WordBook

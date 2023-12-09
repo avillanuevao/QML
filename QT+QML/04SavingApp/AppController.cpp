@@ -77,3 +77,33 @@ BucketType AppController::formQStringToBucketType(int bucketQString)
     }
 }
 
+QString AppController::bucketTypeformIntToQString(int bucketInt)
+{
+    switch (bucketInt) {
+    case 0:
+        return "Savings";
+        break;
+    case 1:
+        return "Housing";
+        break;
+    case 2:
+        return "Food";
+        break;
+    case 3:
+        return "Transportation";
+        break;
+    case 4:
+        return "Entertainment";
+        break;
+    case 5:
+        return "Clothing";
+        break;
+    case 6:
+        return "Debts";
+        break;
+    case 7:
+        return "Car";
+        break;
+    }
+}
+

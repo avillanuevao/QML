@@ -9,7 +9,6 @@ SceneCreator::SceneCreator(QQmlApplicationEngine &engine, QObject *parent) :
 
 void SceneCreator::createScene()
 {
-    std::map<Vocabulary, QString> word = m_WordBook.getLanguage(Languages::English);
     createColumn();
     createRow(itemIDColumn, 0);
     createRow(itemIDColumn, 0);
@@ -17,19 +16,14 @@ void SceneCreator::createScene()
     createRow(itemIDColumn, 0);
     createRow(itemIDColumn, 0);
     createRow(itemIDColumn, 0);
-    QStringList modelListLanguage;
-    modelListLanguage << "English" << "Spanish";
-    QStringList modelListFinances;
-    modelListFinances << word[Vocabulary::FundWord] << word[Vocabulary::ExpenseWord];
-    QStringList modelListItems;
-    modelListItems << word[Vocabulary::SavingsWord] << word[Vocabulary::HousingWord] << word[Vocabulary::FoodWord]<< word[Vocabulary::TransportationWord] << word[Vocabulary::EntertainmentWord] << word[Vocabulary::TravelWord] << word[Vocabulary::ClothingWord] << word[Vocabulary::DebtsWord] << word[Vocabulary::CarWord];
-    createComboBox(modelListLanguage, UIItemType::Language, itemIDRow, 0);
-    createComboBox(modelListFinances, UIItemType::Transaction, itemIDRow, 1);
-    createComboBox(modelListItems, UIItemType::Bucket, itemIDRow, 1);
+    createComboBox(UIItemType::Language, itemIDRow, 0);
+    createComboBox(UIItemType::Transaction, itemIDRow, 1);
+    createComboBox(UIItemType::Bucket, itemIDRow, 1);
     createTextField(itemIDRow, 2);
-    createButton(word[Vocabulary::AcceptWord], UIButtonType::Accept, itemIDRow, 3);
-    createButton(word[Vocabulary::ResetWord], UIButtonType::Reset, itemIDRow, 3);
+    createButton(UIButtonType::Accept, itemIDRow, 3);
+    createButton(UIButtonType::Reset, itemIDRow, 3);
     createTextElement(itemIDRow, 4);
+    initializeTextLanguage();
 }
 
 void SceneCreator::handleButtonClicked()
@@ -86,7 +80,7 @@ void SceneCreator::handleCurrentIndexChanged()
             break;
         case UIItemType::Language:
             selectedLanguage = comboBoxItem->property("currentIndex").toInt();
-            modifyTextLanguage();
+            setTextLanguage();
             break;
         }
     }
@@ -159,7 +153,7 @@ void SceneCreator::createRow(QVector<QQuickItem*> parent, int parentID)
     }
 }
 
-void SceneCreator::createButton(QString textButton, UIButtonType idButton, QVector<QQuickItem*> parent, int parentID)
+void SceneCreator::createButton(UIButtonType idButton, QVector<QQuickItem*> parent, int parentID)
 {
     if(itemIDRow[2])
     {
@@ -174,7 +168,6 @@ void SceneCreator::createButton(QString textButton, UIButtonType idButton, QVect
             componentItem->setParent(parent[parentID]);
             componentItem->setParentItem(parent[parentID]);
             componentItem->setProperty("id", idButton);
-            componentItem->setProperty("text", textButton);
             buttonIdContainter[idButton] = componentItem;
             connect(componentItem, SIGNAL(clicked()), this, SLOT(handleButtonClicked()));
         }else
@@ -184,7 +177,7 @@ void SceneCreator::createButton(QString textButton, UIButtonType idButton, QVect
     }
 }
 
-void SceneCreator::createComboBox(QStringList modelList, UIItemType idComboBox, QVector<QQuickItem*> parent, int parentID)
+void SceneCreator::createComboBox(UIItemType idComboBox, QVector<QQuickItem*> parent, int parentID)
 {
     if(itemIDRow[0])
     {
@@ -199,7 +192,6 @@ void SceneCreator::createComboBox(QStringList modelList, UIItemType idComboBox, 
             componentItem->setParent(parent[parentID]);
             componentItem->setParentItem(parent[parentID]);
             componentItem->setProperty("id", idComboBox);
-            QQmlProperty(componentItem, "model").write(QVariant::fromValue(modelList));
             comboBoxIdContainter[idComboBox] = componentItem;
             connect(componentItem, SIGNAL(currentIndexChanged()), this, SLOT(handleCurrentIndexChanged()));
         }else
@@ -259,7 +251,9 @@ void SceneCreator::modifyTextElement(int newText)
 {
     if (textElement.at(0))
     {
-        textElement.at(0)->setProperty("text", newText);
+        QString bucketType = m_AppController.bucketTypeformIntToQString(selectedBucket);
+        QString message = bucketType + ": " + QString::number(newText);
+        textElement.at(0)->setProperty("text", message);
     }
     else
     {
@@ -267,9 +261,21 @@ void SceneCreator::modifyTextElement(int newText)
     }
 }
 
-void SceneCreator::modifyTextLanguage()
+void SceneCreator::initializeTextLanguage()
+{
+    std::map<Vocabulary, QString> word = m_WordBook.getLanguage(Languages::English);
+    QStringList modelListLanguage;
+    modelListLanguage << word[Vocabulary::EnglishWord] << word[Vocabulary::SpanishWord];
+    QQmlProperty(comboBoxIdContainter[UIItemType::Language], "model").write(QVariant::fromValue(modelListLanguage));
+    setTextLanguage();
+}
+
+void SceneCreator::setTextLanguage()
 {
     std::map<Vocabulary, QString> word;
+    QStringList modelListFinances;
+    QStringList modelListItems;
+
     switch (selectedLanguage) {
     case 0:
         word = m_WordBook.getLanguage(Languages::English);
@@ -278,12 +284,12 @@ void SceneCreator::modifyTextLanguage()
         word = m_WordBook.getLanguage(Languages::Spanish);
         break;
     }
-    buttonIdContainter[UIButtonType::Accept]->setProperty("text", word[Vocabulary::AcceptWord]);
-    buttonIdContainter[UIButtonType::Reset]->setProperty("text", word[Vocabulary::ResetWord]);
-    QStringList modelListFinances;
     modelListFinances << word[Vocabulary::FundWord] << word[Vocabulary::ExpenseWord];
     QQmlProperty(comboBoxIdContainter[UIItemType::Transaction], "model").write(QVariant::fromValue(modelListFinances));
-    QStringList modelListItems;
+
     modelListItems << word[Vocabulary::SavingsWord] << word[Vocabulary::HousingWord] << word[Vocabulary::FoodWord]<< word[Vocabulary::TransportationWord] << word[Vocabulary::EntertainmentWord] << word[Vocabulary::TravelWord] << word[Vocabulary::ClothingWord] << word[Vocabulary::DebtsWord] << word[Vocabulary::CarWord];
     QQmlProperty(comboBoxIdContainter[UIItemType::Bucket], "model").write(QVariant::fromValue(modelListItems));
+
+    buttonIdContainter[UIButtonType::Accept]->setProperty("text", word[Vocabulary::AcceptWord]);
+    buttonIdContainter[UIButtonType::Reset]->setProperty("text", word[Vocabulary::ResetWord]);
 }

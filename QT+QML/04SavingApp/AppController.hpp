@@ -18,6 +18,7 @@ public:
     Q_INVOKABLE int getExpense(int bucketType);
     Q_INVOKABLE int getMoneyBalance(int bucketType);
     Q_INVOKABLE void resetBucketType(int bucketType);
+    QString bucketTypeformIntToQString(int bucketInt);
 private:
     AppModel m_AppModel;
     BucketType formQStringToBucketType(int bucketQString);
