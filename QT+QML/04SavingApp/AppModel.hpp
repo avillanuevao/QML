@@ -5,6 +5,7 @@
 #include <map>
 #include <QDebug>
 #include "BucketType.hpp"
+#include "dataBase.json"
 
 class AppModel
 {

@@ -9,17 +9,27 @@ SceneCreator::SceneCreator(QQmlApplicationEngine &engine, QObject *parent) :
 
 void SceneCreator::createScene()
 {
+    std::map<Vocabulary, QString> word = m_WordBook.getLanguage(Languages::English);
     createColumn();
+    createRow(itemIDColumn, 0);
+    createRow(itemIDColumn, 0);
+    createRow(itemIDColumn, 0);
+    createRow(itemIDColumn, 0);
+    createRow(itemIDColumn, 0);
+    createRow(itemIDColumn, 0);
+    QStringList modelListLanguage;
+    modelListLanguage << "English" << "Spanish";
     QStringList modelListFinances;
-    modelListFinances << "Fund" << "Expense";
+    modelListFinances << word[Vocabulary::FundWord] << word[Vocabulary::ExpenseWord];
     QStringList modelListItems;
-    modelListItems << "Savings" << "Housing" << "Food" << "Transportation" << "Entertainment" << "Travel" << "Clothing" << "Debts" << "Car";
-    createComboBox(modelListFinances, UIItemType::Transaction);
-    createComboBox(modelListItems, UIItemType::Bucket);
-    createTextField();
-    createButton("Accept", UIButtonType::Accept);
-    createButton("Reset", UIButtonType::Reset);
-    createTextElement();
+    modelListItems << word[Vocabulary::SavingsWord] << word[Vocabulary::HousingWord] << word[Vocabulary::FoodWord]<< word[Vocabulary::TransportationWord] << word[Vocabulary::EntertainmentWord] << word[Vocabulary::TravelWord] << word[Vocabulary::ClothingWord] << word[Vocabulary::DebtsWord] << word[Vocabulary::CarWord];
+    createComboBox(modelListLanguage, UIItemType::Language, itemIDRow, 0);
+    createComboBox(modelListFinances, UIItemType::Transaction, itemIDRow, 1);
+    createComboBox(modelListItems, UIItemType::Bucket, itemIDRow, 1);
+    createTextField(itemIDRow, 2);
+    createButton(word[Vocabulary::AcceptWord], UIButtonType::Accept, itemIDRow, 3);
+    createButton(word[Vocabulary::ResetWord], UIButtonType::Reset, itemIDRow, 3);
+    createTextElement(itemIDRow, 4);
 }
 
 void SceneCreator::handleButtonClicked()
@@ -72,6 +82,11 @@ void SceneCreator::handleCurrentIndexChanged()
             break;
         case UIItemType::Bucket:
             selectedBucket = comboBoxItem->property("currentIndex").toInt();
+            modifyTextElement(m_AppController.getMoneyBalance(selectedBucket));
+            break;
+        case UIItemType::Language:
+            selectedLanguage = comboBoxItem->property("currentIndex").toInt();
+            modifyTextLanguage();
             break;
         }
     }
@@ -122,9 +137,31 @@ void SceneCreator::createColumn()
     }
 }
 
-void SceneCreator::createButton(QString textButton, UIButtonType idButton)
+void SceneCreator::createRow(QVector<QQuickItem*> parent, int parentID)
 {
     if(itemIDColumn[0])
+    {
+        QQmlComponent component(&engine);
+        QString qmlCode = "import QtQuick 2.15; import QtQuick.Layouts 1.15; RowLayout{}";
+        component.setData(qmlCode.toUtf8(), QUrl());
+
+        QObject * componentCreate = component.create();
+        QQuickItem *componentItem = qobject_cast<QQuickItem*>(componentCreate);
+        if(componentItem)
+        {
+            componentItem->setParent(parent[parentID]);
+            componentItem->setParentItem(parent[parentID]);
+            itemIDRow.push_back(componentItem);
+        }else
+        {
+            qDebug() << "qmlObject not found";
+        }
+    }
+}
+
+void SceneCreator::createButton(QString textButton, UIButtonType idButton, QVector<QQuickItem*> parent, int parentID)
+{
+    if(itemIDRow[2])
     {
         QQmlComponent component(&engine);
         QString qmlCode = "import QtQuick 2.15; import QtQuick.Controls 2.15; Button{}";
@@ -134,10 +171,11 @@ void SceneCreator::createButton(QString textButton, UIButtonType idButton)
         QQuickItem *componentItem = qobject_cast<QQuickItem*>(componentCreate);
         if(componentItem)
         {
-            componentItem->setParent(itemIDColumn[0]);
-            componentItem->setParentItem(itemIDColumn[0]);
+            componentItem->setParent(parent[parentID]);
+            componentItem->setParentItem(parent[parentID]);
             componentItem->setProperty("id", idButton);
             componentItem->setProperty("text", textButton);
+            buttonIdContainter[idButton] = componentItem;
             connect(componentItem, SIGNAL(clicked()), this, SLOT(handleButtonClicked()));
         }else
         {
@@ -146,9 +184,9 @@ void SceneCreator::createButton(QString textButton, UIButtonType idButton)
     }
 }
 
-void SceneCreator::createComboBox(QStringList modelList, UIItemType idComboBox)
+void SceneCreator::createComboBox(QStringList modelList, UIItemType idComboBox, QVector<QQuickItem*> parent, int parentID)
 {
-    if(itemIDColumn[0])
+    if(itemIDRow[0])
     {
         QQmlComponent component(&engine);
         QString qmlCode = "import QtQuick 2.15; import QtQuick.Controls 2.15; ComboBox{}";
@@ -158,10 +196,11 @@ void SceneCreator::createComboBox(QStringList modelList, UIItemType idComboBox)
         QQuickItem *componentItem = qobject_cast<QQuickItem*>(componentCreate);
         if(componentItem)
         {
-            componentItem->setParent(itemIDColumn[0]);
-            componentItem->setParentItem(itemIDColumn[0]);
+            componentItem->setParent(parent[parentID]);
+            componentItem->setParentItem(parent[parentID]);
             componentItem->setProperty("id", idComboBox);
             QQmlProperty(componentItem, "model").write(QVariant::fromValue(modelList));
+            comboBoxIdContainter[idComboBox] = componentItem;
             connect(componentItem, SIGNAL(currentIndexChanged()), this, SLOT(handleCurrentIndexChanged()));
         }else
         {
@@ -170,9 +209,9 @@ void SceneCreator::createComboBox(QStringList modelList, UIItemType idComboBox)
     }
 }
 
-void SceneCreator::createTextField()
+void SceneCreator::createTextField(QVector<QQuickItem*> parent, int parentID)
 {
-    if(itemIDColumn[0])
+    if(itemIDRow[1])
     {
         QQmlComponent component(&engine);
         QString qmlCode = "import QtQuick 2.15; import QtQuick.Controls 2.15; TextField{}";
@@ -182,8 +221,8 @@ void SceneCreator::createTextField()
         QQuickItem *componentItem = qobject_cast<QQuickItem*>(componentCreate);
         if(componentItem)
         {
-            componentItem->setParent(itemIDColumn[0]);
-            componentItem->setParentItem(itemIDColumn[0]);
+            componentItem->setParent(parent[parentID]);
+            componentItem->setParentItem(parent[parentID]);
             connect(componentItem, SIGNAL(textChanged()), this, SLOT(handleNumericTextChanged()));
         }else
         {
@@ -192,9 +231,9 @@ void SceneCreator::createTextField()
     }
 }
 
-void SceneCreator::createTextElement()
+void SceneCreator::createTextElement(QVector<QQuickItem *> parent, int parentID)
 {
-    if (itemIDColumn[0])
+    if (itemIDRow[3])
     {
         QQmlComponent component(&engine);
         QString qmlCode = "import QtQuick 2.15; import QtQuick.Controls 2.15; Text { }";
@@ -205,8 +244,8 @@ void SceneCreator::createTextElement()
         textElement.push_back(componentItem);
         if (componentItem)
         {
-            componentItem->setParent(itemIDColumn[0]);
-            componentItem->setParentItem(itemIDColumn[0]);
+            componentItem->setParent(parent[parentID]);
+            componentItem->setParentItem(parent[parentID]);
             componentItem->setProperty("text", "0");
         }
         else
@@ -226,4 +265,25 @@ void SceneCreator::modifyTextElement(int newText)
     {
         qDebug() << "Text Element not found";
     }
+}
+
+void SceneCreator::modifyTextLanguage()
+{
+    std::map<Vocabulary, QString> word;
+    switch (selectedLanguage) {
+    case 0:
+        word = m_WordBook.getLanguage(Languages::English);
+        break;
+    case 1:
+        word = m_WordBook.getLanguage(Languages::Spanish);
+        break;
+    }
+    buttonIdContainter[UIButtonType::Accept]->setProperty("text", word[Vocabulary::AcceptWord]);
+    buttonIdContainter[UIButtonType::Reset]->setProperty("text", word[Vocabulary::ResetWord]);
+    QStringList modelListFinances;
+    modelListFinances << word[Vocabulary::FundWord] << word[Vocabulary::ExpenseWord];
+    QQmlProperty(comboBoxIdContainter[UIItemType::Transaction], "model").write(QVariant::fromValue(modelListFinances));
+    QStringList modelListItems;
+    modelListItems << word[Vocabulary::SavingsWord] << word[Vocabulary::HousingWord] << word[Vocabulary::FoodWord]<< word[Vocabulary::TransportationWord] << word[Vocabulary::EntertainmentWord] << word[Vocabulary::TravelWord] << word[Vocabulary::ClothingWord] << word[Vocabulary::DebtsWord] << word[Vocabulary::CarWord];
+    QQmlProperty(comboBoxIdContainter[UIItemType::Bucket], "model").write(QVariant::fromValue(modelListItems));
 }

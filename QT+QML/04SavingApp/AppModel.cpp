@@ -27,7 +27,6 @@ void AppModel::setFund(BucketType bucketType, int funds)
     if(funds >= 0 && updateFunds >= expenses)
     {
         m_fundList[bucketType] = updateFunds;
-        qDebug() << "Funds: " << m_fundList[bucketType];
     }
 }
 
@@ -38,7 +37,6 @@ void AppModel::setExpense(BucketType bucketType, int expenses)
     if(expenses >= 0 && getFund(bucketType) >= updateExpenses)
     {
         m_expenseList[bucketType] = updateExpenses;
-        qDebug() << "Expense: " << m_expenseList[bucketType];
     }
 }
 
