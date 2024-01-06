@@ -22,7 +22,7 @@ namespace model {
 
             if(currentType == fundType)
             {
-                currentFund.setAmount(amount);
+                currentFund.increaseAmount(amount);
             }
         }
     }

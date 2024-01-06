@@ -10,9 +10,9 @@ class Fund
     public:
         Fund(FundType initialFundType, int initialAmount);
 
-        FundType fundType() const;
+        FundType getFundType() const;
         int getAmount() const;
-        void setAmount(int newAmount);
+        void increaseAmount(int newAmount);
 
     private:
         const FundType m_fundType;

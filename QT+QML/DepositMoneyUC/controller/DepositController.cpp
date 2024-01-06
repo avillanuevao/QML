@@ -11,7 +11,6 @@ namespace controller {
     {
         m_depositModel.recieveDepositData(fundType, amount);
     }
-
 }
 
 

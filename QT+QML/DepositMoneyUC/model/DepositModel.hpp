@@ -2,8 +2,8 @@
 #define DEPOSITMODEL_HPP
 
 #include <iostream>
-#include <vector>
 #include <map>
+
 #include <model/FundType.hpp>
 #include <model/Fund.hpp>
 
