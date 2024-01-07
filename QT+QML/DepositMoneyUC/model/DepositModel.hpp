@@ -6,10 +6,12 @@
 
 #include <model/FundType.hpp>
 #include <model/Fund.hpp>
+#include <utils/SignalPublisher.hpp>
+#include <model/signals/Signal.hpp>
 
 namespace model {
 
-class DepositModel
+class DepositModel : public utils::SignalPublisher<model::Signal>
 {
     public:
         DepositModel();

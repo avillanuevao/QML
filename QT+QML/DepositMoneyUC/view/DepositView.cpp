@@ -1,11 +1,11 @@
 #include "DepositView.hpp"
 
 namespace view {
-    DepositView::DepositView(controller::DepositController depositController, model::DepositModel depositModel) :
+    DepositView::DepositView(controller::DepositController &depositController, model::DepositModel &depositModel) :
         m_depositController(depositController),
         m_depositModel(depositModel)
     {
-
+        std::cout << "Address in DepositView: " << &m_depositModel << std::endl;
     }
 
     int DepositView::getInputMoney() const
@@ -30,6 +30,7 @@ namespace view {
 
     void DepositView::getDepositData()
     {
+        std::cout << "3:getDepositData" << std::endl;
         bool isInteger = false;
         bool isFundType = false;
         std::string stringInputMoney;
@@ -73,6 +74,7 @@ namespace view {
 
     void DepositView::sendDepositData()
     {
+        std::cout << "5:sendDepositData" << std::endl;
         m_depositController.sendDepositData(m_inputFundType, m_inputMoney);
     }
 

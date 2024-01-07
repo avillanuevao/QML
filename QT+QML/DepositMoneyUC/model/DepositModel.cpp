@@ -23,8 +23,11 @@ namespace model {
             if(currentType == fundType)
             {
                 currentFund.increaseAmount(amount);
+                Signal signal = Signal();
+                notifySubscribers(signal);
             }
         }
+        std::cout << "Prueba: " << getPrueba() << std::endl;
     }
 }
 

@@ -8,9 +8,13 @@
 int main()
 {
     model::DepositModel depositModel;
-    controller::DepositController depositController;
+    std::cout << "Address in DepositView: " << &depositModel << std::endl;
+    controller::DepositController depositController(depositModel);
     view::DepositView depositView(depositController, depositModel);
-
+    depositModel.addSubscriber(depositController);
+    depositModel.modifyPrueba(10);
     depositView.getDepositData();
     depositView.sendDepositData();
+    std::cout << "Prueba main: " << depositModel.getPrueba() << std::endl;
+
 }

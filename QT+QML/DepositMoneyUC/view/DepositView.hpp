@@ -12,7 +12,7 @@ namespace view {
 class DepositView
 {
     public:
-        DepositView(controller::DepositController depositController, model::DepositModel depositModel);
+        DepositView(controller::DepositController& depositController, model::DepositModel& depositModel);
 
         int getInputMoney() const;
         void setInputMoney(int newInputMoney);
@@ -24,8 +24,8 @@ class DepositView
         std::string convertFundTypeToString(model::FundType fundType);
 
 private:
-        controller::DepositController m_depositController;
-        model::DepositModel m_depositModel;
+        controller::DepositController& m_depositController;
+        model::DepositModel& m_depositModel;
         int m_inputMoney;
         model::FundType m_inputFundType;
 };
