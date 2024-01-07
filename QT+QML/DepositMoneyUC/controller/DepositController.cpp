@@ -11,11 +11,6 @@ namespace controller {
     {
         m_depositModel.recieveDepositData(fundType, amount);
     }
-
-    void DepositController::update()
-    {
-        std::cout << "Signal recieved: " << std::endl;
-    }
 }
 
 

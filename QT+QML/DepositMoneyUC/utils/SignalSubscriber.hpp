@@ -8,7 +8,7 @@ class SignalSubscriber
 {
     public:
         SignalSubscriber() = default;
-        virtual void update() = 0;
+        virtual void update(Signal signal) = 0;
 };
 
 }

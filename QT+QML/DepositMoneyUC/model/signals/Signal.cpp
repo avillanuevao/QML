@@ -1,7 +1,10 @@
 #include "Signal.hpp"
 
+namespace model {
 
-model::Signal::Signal()
+Signal::Signal()
 {
+
+}
 
 }

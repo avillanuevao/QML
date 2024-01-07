@@ -8,15 +8,15 @@
 
 namespace controller {
 
-class DepositController : public utils::SignalSubscriber<model::Signal>
+class DepositController
 {
     public:
         DepositController(model::DepositModel &depositModel);
         void sendDepositData(model::FundType fundType, int amount);
-        void update();
     private:
         model::DepositModel& m_depositModel;
 };
+
 }
 
 #endif // DEPOSITCONTROLLER_HPP

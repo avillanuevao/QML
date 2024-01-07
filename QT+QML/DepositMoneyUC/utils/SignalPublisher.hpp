@@ -21,30 +21,19 @@ class SignalPublisher
             m_subscribers.push_back(subscriber);
         }
 
-        void modifyPrueba(int prueba)
-        {
-            m_prueba = prueba;
-        }
-
         void notifySubscribers(const Signal& signal)
         {
             if(m_subscribers.size() > 0)
             {
                 for (std::reference_wrapper<SignalSubscriber<Signal>>& subscriber : m_subscribers)
                 {
-                    subscriber.get().update();
+                    subscriber.get().update(signal);
                 }
             }
         }
 
-        int getPrueba() const
-        {
-            return m_prueba;
-        }
-
 private:
         std::vector<std::reference_wrapper<SignalSubscriber<Signal>>> m_subscribers;
-        int m_prueba = 0;
 };
 
 }

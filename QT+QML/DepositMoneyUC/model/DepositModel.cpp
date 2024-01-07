@@ -27,7 +27,6 @@ namespace model {
                 notifySubscribers(signal);
             }
         }
-        std::cout << "Prueba: " << getPrueba() << std::endl;
     }
 }
 
