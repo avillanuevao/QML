@@ -7,6 +7,5 @@ viewModel::DepositViewModel::DepositViewModel(model::AllFunds& allFunds) : m_all
 
 void viewModel::DepositViewModel::depositMoney(int amount, model::FundType fundType)
 {
-    //m_allFunds.getFundByType(fundType).increaseAmount(amount);
     m_allFunds.increaseAmount(fundType, amount);
 }

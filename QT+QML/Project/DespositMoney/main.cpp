@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     model::AllFunds allFunds;
     viewModel::DepositViewModel depositViewModel(allFunds);
-    view::DepositMoneyView depositViewMoney(depositViewModel, allFunds);
+    view::DepositMoneyView depositViewMoney(depositViewModel, allFunds, engine);
 
     allFunds.addSubscriber(depositViewMoney);
 

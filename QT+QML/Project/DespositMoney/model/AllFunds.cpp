@@ -11,7 +11,7 @@ namespace model {
     void AllFunds::increaseAmount(FundType fundType, int amount)
     {
         m_funds.find(fundType)->second.increaseAmount(amount);
-        model::MoneyDepositedSignal signal = model::MoneyDepositedSignal();
+        model::MoneyDepositedSignal signal = model::MoneyDepositedSignal(m_funds.find(fundType)->second.getAmount());
         notifySubscribers(signal);
     }
 
@@ -23,7 +23,7 @@ namespace model {
     void AllFunds::setAmount(FundType fundType, int newAmount)
     {
         m_funds.find(fundType)->second.setAmount(newAmount);
-        model::MoneyDepositedSignal signal = model::MoneyDepositedSignal();
+        model::MoneyDepositedSignal signal = model::MoneyDepositedSignal(m_funds.find(fundType)->second.getAmount());
         notifySubscribers(signal);
     }
 

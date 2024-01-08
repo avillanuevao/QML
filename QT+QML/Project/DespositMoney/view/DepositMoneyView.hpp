@@ -2,6 +2,9 @@
 #define DEPOSITMONEYVIEW_HPP
 
 #include <QObject>
+#include <QQmlApplicationEngine>
+#include <QQuickWindow>
+#include <QQmlComponent>
 #include <iostream>
 #include <model/FundType.hpp>
 #include <viewModel/DepositViewModel.hpp>
@@ -15,7 +18,7 @@ namespace view
     {
         Q_OBJECT
         public:
-            explicit DepositMoneyView(viewModel::DepositViewModel& depositViewModel, model::AllFunds& allFunds,QObject *parent = nullptr);
+            explicit DepositMoneyView(viewModel::DepositViewModel& depositViewModel, model::AllFunds& allFunds, QQmlApplicationEngine &engine, QObject *parent = nullptr);
 
             void update(model::MoneyDepositedSignal signal);
 
@@ -28,6 +31,7 @@ namespace view
 
 
         private:
+            QQmlApplicationEngine& m_engine;
             viewModel::DepositViewModel& m_depositViewModel;
             model::AllFunds& m_allFunds;
 

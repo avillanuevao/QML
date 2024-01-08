@@ -11,6 +11,8 @@ Window {
 
     ColumnLayout
     {
+        id: columnLayout
+
         RadioButton
         {
             id: depositRB
@@ -59,6 +61,7 @@ Window {
         }
 
         Text {
+            objectName: "displayT"
             id: displayT
             text: depositViewMoney.getAmountFromFund()
         }
